@@ -1,0 +1,557 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		FE42E3F62DEB0C6B009E3943 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE42E3DD2DEB0C6A009E3943 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE42E3E42DEB0C6A009E3943;
+			remoteInfo = brainrotflappybird;
+		};
+		FE42E4002DEB0C6B009E3943 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = FE42E3DD2DEB0C6A009E3943 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FE42E3E42DEB0C6A009E3943;
+			remoteInfo = brainrotflappybird;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		FE42E3E52DEB0C6A009E3943 /* brainrotflappybird.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = brainrotflappybird.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE42E3F52DEB0C6B009E3943 /* brainrotflappybirdTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = brainrotflappybirdTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FE42E3FF2DEB0C6B009E3943 /* brainrotflappybirdUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = brainrotflappybirdUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		FE42E3E72DEB0C6A009E3943 /* brainrotflappybird */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = brainrotflappybird;
+			sourceTree = "<group>";
+		};
+		FE42E3F82DEB0C6B009E3943 /* brainrotflappybirdTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = brainrotflappybirdTests;
+			sourceTree = "<group>";
+		};
+		FE42E4022DEB0C6B009E3943 /* brainrotflappybirdUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = brainrotflappybirdUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FE42E3E22DEB0C6A009E3943 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE42E3F22DEB0C6B009E3943 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE42E3FC2DEB0C6B009E3943 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FE42E3DC2DEB0C6A009E3943 = {
+			isa = PBXGroup;
+			children = (
+				FE42E3E72DEB0C6A009E3943 /* brainrotflappybird */,
+				FE42E3F82DEB0C6B009E3943 /* brainrotflappybirdTests */,
+				FE42E4022DEB0C6B009E3943 /* brainrotflappybirdUITests */,
+				FE42E3E62DEB0C6A009E3943 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FE42E3E62DEB0C6A009E3943 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FE42E3E52DEB0C6A009E3943 /* brainrotflappybird.app */,
+				FE42E3F52DEB0C6B009E3943 /* brainrotflappybirdTests.xctest */,
+				FE42E3FF2DEB0C6B009E3943 /* brainrotflappybirdUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FE42E3E42DEB0C6A009E3943 /* brainrotflappybird */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE42E4092DEB0C6B009E3943 /* Build configuration list for PBXNativeTarget "brainrotflappybird" */;
+			buildPhases = (
+				FE42E3E12DEB0C6A009E3943 /* Sources */,
+				FE42E3E22DEB0C6A009E3943 /* Frameworks */,
+				FE42E3E32DEB0C6A009E3943 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				FE42E3E72DEB0C6A009E3943 /* brainrotflappybird */,
+			);
+			name = brainrotflappybird;
+			packageProductDependencies = (
+			);
+			productName = brainrotflappybird;
+			productReference = FE42E3E52DEB0C6A009E3943 /* brainrotflappybird.app */;
+			productType = "com.apple.product-type.application";
+		};
+		FE42E3F42DEB0C6B009E3943 /* brainrotflappybirdTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE42E40C2DEB0C6B009E3943 /* Build configuration list for PBXNativeTarget "brainrotflappybirdTests" */;
+			buildPhases = (
+				FE42E3F12DEB0C6B009E3943 /* Sources */,
+				FE42E3F22DEB0C6B009E3943 /* Frameworks */,
+				FE42E3F32DEB0C6B009E3943 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FE42E3F72DEB0C6B009E3943 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FE42E3F82DEB0C6B009E3943 /* brainrotflappybirdTests */,
+			);
+			name = brainrotflappybirdTests;
+			packageProductDependencies = (
+			);
+			productName = brainrotflappybirdTests;
+			productReference = FE42E3F52DEB0C6B009E3943 /* brainrotflappybirdTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		FE42E3FE2DEB0C6B009E3943 /* brainrotflappybirdUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FE42E40F2DEB0C6B009E3943 /* Build configuration list for PBXNativeTarget "brainrotflappybirdUITests" */;
+			buildPhases = (
+				FE42E3FB2DEB0C6B009E3943 /* Sources */,
+				FE42E3FC2DEB0C6B009E3943 /* Frameworks */,
+				FE42E3FD2DEB0C6B009E3943 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FE42E4012DEB0C6B009E3943 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				FE42E4022DEB0C6B009E3943 /* brainrotflappybirdUITests */,
+			);
+			name = brainrotflappybirdUITests;
+			packageProductDependencies = (
+			);
+			productName = brainrotflappybirdUITests;
+			productReference = FE42E3FF2DEB0C6B009E3943 /* brainrotflappybirdUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FE42E3DD2DEB0C6A009E3943 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					FE42E3E42DEB0C6A009E3943 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					FE42E3F42DEB0C6B009E3943 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = FE42E3E42DEB0C6A009E3943;
+					};
+					FE42E3FE2DEB0C6B009E3943 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = FE42E3E42DEB0C6A009E3943;
+					};
+				};
+			};
+			buildConfigurationList = FE42E3E02DEB0C6A009E3943 /* Build configuration list for PBXProject "brainrotflappybird" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = FE42E3DC2DEB0C6A009E3943;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = FE42E3E62DEB0C6A009E3943 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FE42E3E42DEB0C6A009E3943 /* brainrotflappybird */,
+				FE42E3F42DEB0C6B009E3943 /* brainrotflappybirdTests */,
+				FE42E3FE2DEB0C6B009E3943 /* brainrotflappybirdUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FE42E3E32DEB0C6A009E3943 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE42E3F32DEB0C6B009E3943 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE42E3FD2DEB0C6B009E3943 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FE42E3E12DEB0C6A009E3943 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE42E3F12DEB0C6B009E3943 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE42E3FB2DEB0C6B009E3943 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		FE42E3F72DEB0C6B009E3943 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FE42E3E42DEB0C6A009E3943 /* brainrotflappybird */;
+			targetProxy = FE42E3F62DEB0C6B009E3943 /* PBXContainerItemProxy */;
+		};
+		FE42E4012DEB0C6B009E3943 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FE42E3E42DEB0C6A009E3943 /* brainrotflappybird */;
+			targetProxy = FE42E4002DEB0C6B009E3943 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		FE42E4072DEB0C6B009E3943 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		FE42E4082DEB0C6B009E3943 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		FE42E40A2DEB0C6B009E3943 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"brainrotflappybird/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sahil.brainrotflappybird;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FE42E40B2DEB0C6B009E3943 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"brainrotflappybird/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sahil.brainrotflappybird;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FE42E40D2DEB0C6B009E3943 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sahil.brainrotflappybirdTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/brainrotflappybird.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/brainrotflappybird";
+			};
+			name = Debug;
+		};
+		FE42E40E2DEB0C6B009E3943 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sahil.brainrotflappybirdTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/brainrotflappybird.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/brainrotflappybird";
+			};
+			name = Release;
+		};
+		FE42E4102DEB0C6B009E3943 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sahil.brainrotflappybirdUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = brainrotflappybird;
+			};
+			name = Debug;
+		};
+		FE42E4112DEB0C6B009E3943 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sahil.brainrotflappybirdUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = brainrotflappybird;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FE42E3E02DEB0C6A009E3943 /* Build configuration list for PBXProject "brainrotflappybird" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE42E4072DEB0C6B009E3943 /* Debug */,
+				FE42E4082DEB0C6B009E3943 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE42E4092DEB0C6B009E3943 /* Build configuration list for PBXNativeTarget "brainrotflappybird" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE42E40A2DEB0C6B009E3943 /* Debug */,
+				FE42E40B2DEB0C6B009E3943 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE42E40C2DEB0C6B009E3943 /* Build configuration list for PBXNativeTarget "brainrotflappybirdTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE42E40D2DEB0C6B009E3943 /* Debug */,
+				FE42E40E2DEB0C6B009E3943 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FE42E40F2DEB0C6B009E3943 /* Build configuration list for PBXNativeTarget "brainrotflappybirdUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE42E4102DEB0C6B009E3943 /* Debug */,
+				FE42E4112DEB0C6B009E3943 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FE42E3DD2DEB0C6A009E3943 /* Project object */;
+}
