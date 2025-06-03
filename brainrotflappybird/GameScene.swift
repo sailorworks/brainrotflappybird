@@ -53,9 +53,35 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // --- Setup Methods ---
 
     func setupBackground() {
-        let skyColor = SKColor(red: 135.0/255.0, green: 206.0/255.0, blue: 235.0/255.0, alpha: 1.0)
-        backgroundColor = skyColor
+        // Try to load the background image first
+        if let backgroundTexture = SKTexture(optionalImageNamed: "background-day.png") {
+            backgroundTexture.filteringMode = .nearest
+            
+            let backgroundSprite = SKSpriteNode(texture: backgroundTexture)
+            backgroundSprite.name = "background"
+            backgroundSprite.zPosition = -10 // Behind everything else
+            
+            // Scale the background to fit the screen while maintaining aspect ratio
+            let scaleX = self.frame.width / backgroundTexture.size().width
+            let scaleY = self.frame.height / backgroundTexture.size().height
+            let scale = max(scaleX, scaleY) // Use max to ensure full coverage
+            
+            backgroundSprite.scale(to: CGSize(width: backgroundTexture.size().width * scale,
+                                             height: backgroundTexture.size().height * scale))
+            
+            // Center the background
+            backgroundSprite.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+            
+            addChild(backgroundSprite)
+            print("[BackgroundSetup] Background image loaded successfully. Original size: \(backgroundTexture.size()), Scaled size: \(backgroundSprite.size)")
+        } else {
+            // Fallback to sky blue color if image not found
+            print("WARNING: background-day.png not found. Using sky blue color.")
+            let skyColor = SKColor(red: 135.0/255.0, green: 206.0/255.0, blue: 235.0/255.0, alpha: 1.0)
+            backgroundColor = skyColor
+        }
     }
+
 
     func setupGround() {
         ground = SKNode()
