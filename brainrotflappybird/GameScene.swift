@@ -36,6 +36,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     let pipeSpawnInterval: TimeInterval = 1.5
 
+    // Character Selection
+    var characterSelectionActive = false
+    var selectedCharacterIndex = 0 // 0 = flappybird.png, 1 = flappybird2.png, 2 = flappybird3.png
+    var characterTextures: [SKTexture] = []
+    var characterPreviewBirds: [SKSpriteNode] = []
+    var characterSelectionLabel: SKLabelNode!
+    var selectCharacterLabel: SKLabelNode!
+
 
     // --- Scene Lifecycle ---
 
@@ -45,9 +53,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         setupBackground()
         setupGround()
+        // Bird needs to be initialized for the character selection logic to potentially hide/show it.
+        // It will be fully configured by updateBirdCharacter later.
         setupBird()
         setupScoreLabel()
         setupTapToStartLabel()
+        
+        // Show character selection instead of game start
+        setupCharacterSelection()
     }
 
     // --- Setup Methods ---
@@ -120,34 +133,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func setupBird() {
-        guard let birdTexture = SKTexture(optionalImageNamed: "flappybird") else {
-            print("FATAL ERROR: flappybird.png texture not found. Creating placeholder bird.")
-            bird = SKSpriteNode(color: .orange, size: CGSize(width: 34, height: 24))
-            bird.position = CGPoint(x: self.frame.midX - 100, y: self.frame.midY + 50)
-            bird.zPosition = 10
-            bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.size.height / 2.3)
-            bird.physicsBody!.isDynamic = true
-            bird.physicsBody!.allowsRotation = false
-            bird.physicsBody!.categoryBitMask = PhysicsCategory.bird
-            bird.physicsBody!.contactTestBitMask = PhysicsCategory.pipe | PhysicsCategory.ground | PhysicsCategory.scoreNode
-            bird.physicsBody!.collisionBitMask = PhysicsCategory.ground | PhysicsCategory.pipe
-            bird.physicsBody!.affectedByGravity = false
-            addChild(bird)
-            return
-        }
-        birdTexture.filteringMode = .nearest
-        bird = SKSpriteNode(texture: birdTexture)
-        bird.size = CGSize(width: birdTexture.size().width * 0.8, height: birdTexture.size().height * 0.8)
+        // This initial setup ensures 'bird' is not nil.
+        // updateBirdCharacter will replace this with the selected character.
+        // Using a placeholder texture initially.
+        let initialTexture = SKTexture() // An empty texture
+        bird = SKSpriteNode(texture: initialTexture)
+        bird.size = CGSize(width: 34, height: 24) // A default small size
         bird.position = CGPoint(x: self.frame.midX - 100, y: self.frame.midY + 50)
         bird.zPosition = 10
+        // Initial physics body, will be re-created in updateBirdCharacter
         bird.physicsBody = SKPhysicsBody(circleOfRadius: bird.size.height / 2.3)
-        bird.physicsBody?.isDynamic = true
-        bird.physicsBody?.allowsRotation = false
-        bird.physicsBody?.categoryBitMask = PhysicsCategory.bird
-        bird.physicsBody?.contactTestBitMask = PhysicsCategory.pipe | PhysicsCategory.ground | PhysicsCategory.scoreNode
-        bird.physicsBody?.collisionBitMask = PhysicsCategory.ground | PhysicsCategory.pipe
-        bird.physicsBody?.affectedByGravity = false
+        bird.physicsBody!.isDynamic = true
+        bird.physicsBody!.allowsRotation = false
+        bird.physicsBody!.categoryBitMask = PhysicsCategory.bird
+        bird.physicsBody!.contactTestBitMask = PhysicsCategory.pipe | PhysicsCategory.ground | PhysicsCategory.scoreNode
+        bird.physicsBody!.collisionBitMask = PhysicsCategory.ground | PhysicsCategory.pipe
+        bird.physicsBody!.affectedByGravity = false
         addChild(bird)
+        bird.isHidden = true // Hide initially, character selection screen will manage this
     }
 
     func setupScoreLabel() {
@@ -162,6 +165,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.zPosition = 20
         scoreLabel.text = "0"
         addChild(scoreLabel)
+        scoreLabel.isHidden = true // Hide initially
     }
 
     func setupTapToStartLabel() {
@@ -175,7 +179,233 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         tapToStartLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
         tapToStartLabel.zPosition = 20
         addChild(tapToStartLabel)
+        tapToStartLabel.isHidden = true // Hide initially
     }
+
+    // --- Character Selection Functions ---
+
+    func loadCharacterTextures() {
+        let characterNames = ["flappybird.png", "flappybird2.png", "flappybird3.png"]
+        characterTextures.removeAll()
+        
+        for name in characterNames {
+            if let texture = SKTexture(optionalImageNamed: name) {
+                texture.filteringMode = .nearest
+                characterTextures.append(texture)
+                print("[CharacterLoad] Loaded texture: \(name)")
+            } else {
+                print("[CharacterLoad] WARNING: Could not load \(name), using placeholder")
+                // Create a placeholder colored texture if image not found
+                let placeholderTexture = SKTexture()
+                characterTextures.append(placeholderTexture)
+            }
+        }
+    }
+
+    func setupCharacterSelection() {
+        characterSelectionActive = true
+        loadCharacterTextures()
+        
+        // Hide existing game elements
+        tapToStartLabel.isHidden = true
+        scoreLabel.isHidden = true
+        if bird != nil { // Ensure bird is not nil before accessing
+          bird.isHidden = true
+        }
+        
+        // Create selection title
+        selectCharacterLabel = SKLabelNode(fontNamed: "04b_19")
+        if UIFont(name: "04b_19", size: 1) == nil {
+            selectCharacterLabel.fontName = "HelveticaNeue-Bold"
+        }
+//        selectCharacterLabel.text = "Choose Your Character"
+//        selectCharacterLabel.fontSize = 35
+//        selectCharacterLabel.fontColor = SKColor.white
+//        selectCharacterLabel.position = CGPoint(x: self.frame.midX, y: self.frame.maxY - 150)
+//        selectCharacterLabel.zPosition = 20
+//        selectCharacterLabel.name = "characterSelectionUI"
+//        addChild(selectCharacterLabel)
+        
+        // Create instruction label
+        characterSelectionLabel = SKLabelNode(fontNamed: "04b_19")
+        if UIFont(name: "04b_19", size: 1) == nil {
+            characterSelectionLabel.fontName = "HelveticaNeue-Bold"
+        }
+        characterSelectionLabel.text = "Tap on a character to select"
+        characterSelectionLabel.fontSize = 20
+        characterSelectionLabel.fontColor = SKColor.white
+        characterSelectionLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 100)
+        characterSelectionLabel.zPosition = 20
+        characterSelectionLabel.name = "characterSelectionUI"
+        addChild(characterSelectionLabel)
+        
+        // Create character preview birds
+        characterPreviewBirds.removeAll() // Clear previous ones
+        let spacing: CGFloat = 120
+        let startX = self.frame.midX - spacing // Center the group of 3 birds
+        
+        for i in 0..<3 { // Assuming 3 characters
+            let previewBird: SKSpriteNode
+            
+            // Check if texture exists and is valid (has a size)
+            if i < characterTextures.count && characterTextures[i].size().width > 0 && characterTextures[i].size().height > 0 {
+                let texture = characterTextures[i]
+                previewBird = SKSpriteNode(texture: texture)
+                // Scale preview bird to a consistent visual size, e.g., based on height
+                let desiredHeight: CGFloat = 50.0
+                let aspectRatio = texture.size().width / texture.size().height
+                previewBird.size = CGSize(width: desiredHeight * aspectRatio, height: desiredHeight)
+            } else {
+                // Fallback colored birds if textures not available or are 0x0
+                let colors: [SKColor] = [.orange, .red, .blue]
+                previewBird = SKSpriteNode(color: colors[i % colors.count], size: CGSize(width: 40 * 1.2, height: 28 * 1.2))
+            }
+            
+            previewBird.position = CGPoint(x: startX + (spacing * CGFloat(i)), y: self.frame.midY)
+            previewBird.zPosition = 15
+            previewBird.name = "characterPreview_\(i)"
+            
+            // Add selection indicator (border)
+            let border = SKShapeNode(rect: CGRect(x: -previewBird.size.width/2 - 5,
+                                                y: -previewBird.size.height/2 - 5,
+                                                width: previewBird.size.width + 10,
+                                                height: previewBird.size.height + 10))
+            border.strokeColor = i == selectedCharacterIndex ? SKColor.yellow : SKColor.clear
+            border.lineWidth = 3
+            border.name = "selectionBorder"
+            previewBird.addChild(border)
+            
+            // Add floating animation
+            let floatUp = SKAction.moveBy(x: 0, y: 10, duration: 1.0)
+            let floatDown = SKAction.moveBy(x: 0, y: -10, duration: 1.0)
+            let floatSequence = SKAction.sequence([floatUp, floatDown])
+            let floatForever = SKAction.repeatForever(floatSequence)
+            previewBird.run(floatForever)
+            
+            characterPreviewBirds.append(previewBird)
+            addChild(previewBird)
+        }
+        
+        // Add "Start Game" button
+        let startGameLabelNode = SKLabelNode(fontNamed: "04b_19") // Renamed to avoid conflict if 'startGameLabel' is a property
+        if UIFont(name: "04b_19", size: 1) == nil {
+            startGameLabelNode.fontName = "HelveticaNeue-Bold"
+        }
+        startGameLabelNode.text = "TAP TO START GAME"
+        startGameLabelNode.fontSize = 25
+        startGameLabelNode.fontColor = SKColor.green
+        startGameLabelNode.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 150)
+        startGameLabelNode.zPosition = 20
+        startGameLabelNode.name = "startGameButton"
+        addChild(startGameLabelNode)
+        
+        print("[CharacterSelection] Character selection screen setup complete.")
+    }
+
+    func selectCharacter(_ index: Int) {
+        guard index >= 0 && index < characterPreviewBirds.count else { return }
+        
+        // Update selection
+        selectedCharacterIndex = index
+        
+        // Update visual indicators
+        for (i, previewBird) in characterPreviewBirds.enumerated() {
+            if let border = previewBird.childNode(withName: "selectionBorder") as? SKShapeNode {
+                border.strokeColor = i == selectedCharacterIndex ? SKColor.yellow : SKColor.clear
+            }
+        }
+        
+        print("[CharacterSelection] Selected character \(index + 1)")
+    }
+    
+    func updateBirdCharacter() {
+        guard selectedCharacterIndex < characterTextures.count else {
+            print("[CharacterUpdate] Invalid character index, using default")
+            // If this happens, the bird won't be updated, which might be an issue.
+            // Consider a default bird setup here if this guard can fail post-selection.
+            return
+        }
+        
+        let selectedTexture = characterTextures[selectedCharacterIndex]
+        
+        // Remove old bird instance before creating a new one
+        if bird?.parent != nil { // bird can be nil if setupBird wasn't called or bird was removed elsewhere
+            bird.removeFromParent()
+        }
+        
+        // Create new bird with selected character
+        // Your provided condition: !selectedTexture.description.isEmpty
+        // This is true for SKTexture() placeholders, leading to 0x0 size.
+        // A better check is for actual texture dimensions:
+        if selectedTexture.size().width > 0 && selectedTexture.size().height > 0 {
+            bird = SKSpriteNode(texture: selectedTexture)
+            bird.size = CGSize(width: selectedTexture.size().width * 0.8,
+                              height: selectedTexture.size().height * 0.8)
+            print("[CharacterUpdate] Updated bird with character \(selectedCharacterIndex + 1)")
+        } else {
+            // Fallback if texture is placeholder (0x0 size) or otherwise invalid
+            let colors: [SKColor] = [.orange, .red, .blue]
+            // Use scaled default size for colored fallback
+            bird = SKSpriteNode(color: colors[selectedCharacterIndex % colors.count], size: CGSize(width: 34 * 0.8, height: 24 * 0.8))
+            print("[CharacterUpdate] Using fallback color for character \(selectedCharacterIndex + 1) as texture was invalid/empty.")
+        }
+        
+        // Set bird properties
+        bird.position = CGPoint(x: self.frame.midX - 100, y: self.frame.midY + 50)
+        bird.zPosition = 10
+
+        // Ensure physics body radius is based on a non-zero height.
+        // bird.size is guaranteed to be > 0 by the if/else logic above.
+        let radius = bird.size.height / 2.3
+        if radius <= 0 {
+             // This case should ideally not be reached if the size logic above is correct.
+            print("[CharacterUpdate] ERROR: Calculated physics body radius is \(radius). Bird size: \(bird.size). Using failsafe radius.")
+            bird.physicsBody = SKPhysicsBody(circleOfRadius: 10) // Failsafe radius
+        } else {
+            bird.physicsBody = SKPhysicsBody(circleOfRadius: radius)
+        }
+        
+        bird.physicsBody?.isDynamic = true
+        bird.physicsBody?.allowsRotation = false
+        bird.physicsBody?.categoryBitMask = PhysicsCategory.bird
+        bird.physicsBody?.contactTestBitMask = PhysicsCategory.pipe | PhysicsCategory.ground | PhysicsCategory.scoreNode
+        bird.physicsBody?.collisionBitMask = PhysicsCategory.ground | PhysicsCategory.pipe
+        bird.physicsBody?.affectedByGravity = false // Gravity enabled when game actually starts
+        addChild(bird)
+    }
+
+    func startGameWithSelectedCharacter() {
+        // Remove character selection UI
+        removeChildren(in: children.filter { $0.name == "characterSelectionUI" ||
+                                            $0.name?.hasPrefix("characterPreview_") == true ||
+                                            $0.name == "startGameButton" })
+        characterPreviewBirds.removeAll() // Clear the array
+        if selectCharacterLabel?.parent != nil { selectCharacterLabel.removeFromParent() }
+        if characterSelectionLabel?.parent != nil { characterSelectionLabel.removeFromParent() }
+
+        characterSelectionActive = false
+        
+        // Update bird with selected character
+        updateBirdCharacter() // This will create and add the new bird
+        
+        // Show game elements
+        tapToStartLabel.isHidden = false
+        scoreLabel.isHidden = false
+        if bird != nil { // bird should be non-nil after updateBirdCharacter
+            bird.isHidden = false
+        }
+        
+        // Reset game state for a fresh start before "Tap to Start"
+        gameOver = false
+        gameStarted = false
+        score = 0
+        scoreLabel.text = "0"
+        tapToStartLabel.text = "Tap to Start"
+
+        // Bird physics and position are set in updateBirdCharacter.
+        // Gravity will be enabled in startGame() upon the next tap.
+    }
+
 
     // --- Game Logic ---
 
@@ -187,28 +417,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         gameStarted = true
         gameOver = false
-        score = 0
-        scoreLabel.text = "0"
+        // Score is reset when transitioning from character selection or in resetGame
+        // scoreLabel.text = "0"
         tapToStartLabel.isHidden = true
+        bird.isHidden = false // Ensure bird is visible
         
-        // Reset bird
+        // Activate bird physics
         bird.physicsBody?.affectedByGravity = true
         bird.physicsBody?.velocity = CGVector.zero
-        bird.position = CGPoint(x: self.frame.midX - 100, y: self.frame.midY + 50)
-        bird.zRotation = 0
+        // Initial position/rotation should be set by updateBirdCharacter or resetGame logic
         
-        // Ensure ground is properly positioned before starting movement
-        if !gameStarted || gameOver {
-            resetGroundPositions()
-        }
+        resetGroundPositions() // Ensure ground is correctly positioned and starts moving
         
         // Start pipe spawning
         pipeSpawnTimer?.invalidate()
         pipeSpawnTimer = Timer.scheduledTimer(timeInterval: pipeSpawnInterval, target: self, selector: #selector(spawnPipePair), userInfo: nil, repeats: true)
         print("[GameLogic] startGame() called, pipeSpawnTimer started.")
         
-        // Start ground movement
-        moveGround()
+        moveGround() // Start ground movement
     }
     
     func flapBird() {
@@ -221,7 +447,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     @objc func spawnPipePair() {
         guard gameStarted && !gameOver else { return }
-        print("[PipeSpawnDebug] Attempting to spawn pipe pair...")
+        // print("[PipeSpawnDebug] Attempting to spawn pipe pair...") // Reduce log noise
 
         guard let bottomPipeTexture = SKTexture(optionalImageNamed: "pipe.png") else {
             print("[PipeSpawnDebug] ERROR: Bottom pipe texture (pipe.png) not found. Skipping pipe spawn.")
@@ -231,67 +457,50 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("[PipeSpawnDebug] ERROR: Top pipe texture (pipeinverted.png) not found. Skipping pipe spawn.")
             return
         }
-        print("[PipeSpawnDebug] Core pipe textures loaded.")
+        // print("[PipeSpawnDebug] Core pipe textures loaded.") // Reduce log noise
         bottomPipeTexture.filteringMode = .nearest
         topPipeTexture.filteringMode = .nearest
-        // If you want textures to tile instead of stretch (looks better but more complex setup)
-        // bottomPipeTexture.usesMipmaps = false // Optional
-        // topPipeTexture.usesMipmaps = false    // Optional
 
-
-        let pipeImageWidth = bottomPipeTexture.size().width // Use the width from your image
-        // We will determine heights dynamically.
+        let pipeImageWidth = bottomPipeTexture.size().width
 
         let groundSpriteNode = ground.children.first as? SKSpriteNode
         let groundHeight = groundSpriteNode?.size.height ?? 80.0
 
-        // Determine the Y position for the bottom of the gap
-        // Min: Ground + Padding + Min Visible Pipe Body (e.g., 50)
-        // Max: Screen Height - Padding - Min Visible Pipe Body - Gap Height
-        let minGapBottomY = groundHeight + verticalPaddingForPipes + 50.0 // 50 is an arbitrary min height for top pipe body
-        let maxGapBottomY = self.frame.height - verticalPaddingForPipes - 50.0 - pipeGap // 50 for bottom pipe body
+        let minGapBottomY = groundHeight + verticalPaddingForPipes + 50.0
+        let maxGapBottomY = self.frame.height - verticalPaddingForPipes - 50.0 - pipeGap
         
         guard maxGapBottomY > minGapBottomY else {
             print("[PipeSpawnDebug] CRITICAL ERROR: Not enough vertical space for gap positioning. MinGapBottomY: \(minGapBottomY), MaxGapBottomY: \(maxGapBottomY)")
             return
         }
-        // This is the Y coordinate of the bottom opening of the gap (top of the bottom pipe's opening)
         let gapBottomY = CGFloat.random(in: minGapBottomY...maxGapBottomY)
-        // This is the Y coordinate of the top opening of the gap (bottom of the top pipe's opening)
         let gapTopY = gapBottomY + pipeGap
 
-        print("[PipeSpawnDebug] ScreenH: \(self.frame.height), GroundH: \(groundHeight), Padding: \(verticalPaddingForPipes), PipeGap: \(pipeGap)")
-        print("[PipeSpawnDebug] Chosen GapBottomY: \(gapBottomY), GapTopY: \(gapTopY)")
+        // print("[PipeSpawnDebug] ScreenH: \(self.frame.height), GroundH: \(groundHeight), Padding: \(verticalPaddingForPipes), PipeGap: \(pipeGap)") // Reduce log noise
+        // print("[PipeSpawnDebug] Chosen GapBottomY: \(gapBottomY), GapTopY: \(gapTopY)") // Reduce log noise
 
 
         let spawnXPosition = self.frame.maxX + pipeImageWidth / 2
         var nodesToAnimate: [SKNode] = []
 
-        // --- Bottom Pipe (pipe.png) ---
-        // This pipe will extend from the ground (plus padding) up to gapBottomY
-        let bottomPipeHeight = gapBottomY - groundHeight // Height of the visible part of bottom pipe
+        let bottomPipeHeight = gapBottomY - groundHeight
         
         guard bottomPipeHeight > 0 else {
-            print("[PipeSpawnDebug] Bottom pipe height is zero or negative. Skipping. \(bottomPipeHeight)")
+            // print("[PipeSpawnDebug] Bottom pipe height is zero or negative. Skipping. \(bottomPipeHeight)") // Reduce log noise
             return
         }
 
         let bottomPipe = SKSpriteNode(texture: bottomPipeTexture)
         bottomPipe.name = "pipe"
-        // Anchor at the very bottom of the texture, so we can position it at ground level
-        // and then scale its height upwards.
-        bottomPipe.anchorPoint = CGPoint(x: 0.5, y: 0.0) // BOTTOM-CENTER
+        bottomPipe.anchorPoint = CGPoint(x: 0.5, y: 0.0)
         bottomPipe.size = CGSize(width: pipeImageWidth, height: bottomPipeHeight)
-        // Position its bottom edge at the ground level (or slightly above if you want padding *below* the pipe texture)
-        bottomPipe.position = CGPoint(x: spawnXPosition, y: groundHeight) // + verticalPaddingForPipes if you want padding *under* the pipe.
-                                                                          // Or 0 if groundHeight is 0 and ground is just visual
+        bottomPipe.position = CGPoint(x: spawnXPosition, y: groundHeight)
         
-        print("[PipeSpawnDebug] BottomPipe: pos Y \(bottomPipe.position.y), height \(bottomPipe.size.height). Top edge should be at \(bottomPipe.position.y + bottomPipe.size.height)")
+        // print("[PipeSpawnDebug] BottomPipe: pos Y \(bottomPipe.position.y), height \(bottomPipe.size.height). Top edge should be at \(bottomPipe.position.y + bottomPipe.size.height)") // Reduce log noise
 
-        bottomPipe.physicsBody = SKPhysicsBody(rectangleOf: bottomPipe.size, center: CGPoint(x: 0, y: bottomPipe.size.height / 2)) // Physics body relative to anchor
+        bottomPipe.physicsBody = SKPhysicsBody(rectangleOf: bottomPipe.size, center: CGPoint(x: 0, y: bottomPipe.size.height / 2))
         bottomPipe.physicsBody?.isDynamic = false
         bottomPipe.physicsBody?.categoryBitMask = PhysicsCategory.pipe
-        // ... (rest of physics setup)
         bottomPipe.physicsBody?.contactTestBitMask = PhysicsCategory.bird
         bottomPipe.physicsBody?.collisionBitMask = PhysicsCategory.bird
         bottomPipe.zPosition = 5
@@ -299,50 +508,42 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         nodesToAnimate.append(bottomPipe)
 
 
-        // --- Top Pipe (pipeinverted.png) ---
-        // This pipe will extend from gapTopY up to the top of the screen (minus padding)
-        let topPipeHeight = self.frame.height - gapTopY // Height of the visible part of top pipe
+        let topPipeHeight = self.frame.height - gapTopY
         
         guard topPipeHeight > 0 else {
-            print("[PipeSpawnDebug] Top pipe height is zero or negative. Skipping. \(topPipeHeight)")
+            // print("[PipeSpawnDebug] Top pipe height is zero or negative. Skipping. \(topPipeHeight)") // Reduce log noise
             return
         }
 
         let topPipe = SKSpriteNode(texture: topPipeTexture)
         topPipe.name = "pipe"
-        // Anchor at the very top of the texture.
-        topPipe.anchorPoint = CGPoint(x: 0.5, y: 1.0) // TOP-CENTER
+        topPipe.anchorPoint = CGPoint(x: 0.5, y: 1.0)
         topPipe.size = CGSize(width: pipeImageWidth, height: topPipeHeight)
-        // Position its top edge at the top of the screen
-        topPipe.position = CGPoint(x: spawnXPosition, y: self.frame.height) // - verticalPaddingForPipes if you want padding *above* the pipe
+        topPipe.position = CGPoint(x: spawnXPosition, y: self.frame.height)
         
-        print("[PipeSpawnDebug] TopPipe: pos Y \(topPipe.position.y), height \(topPipe.size.height). Bottom edge should be at \(topPipe.position.y - topPipe.size.height)")
+        // print("[PipeSpawnDebug] TopPipe: pos Y \(topPipe.position.y), height \(topPipe.size.height). Bottom edge should be at \(topPipe.position.y - topPipe.size.height)") // Reduce log noise
 
-        topPipe.physicsBody = SKPhysicsBody(rectangleOf: topPipe.size, center: CGPoint(x: 0, y: -topPipe.size.height / 2)) // Physics body relative to anchor
+        topPipe.physicsBody = SKPhysicsBody(rectangleOf: topPipe.size, center: CGPoint(x: 0, y: -topPipe.size.height / 2))
         topPipe.physicsBody?.isDynamic = false
         topPipe.physicsBody?.categoryBitMask = PhysicsCategory.pipe
-        // ... (rest of physics setup)
         topPipe.physicsBody?.contactTestBitMask = PhysicsCategory.bird
         topPipe.physicsBody?.collisionBitMask = PhysicsCategory.bird
         topPipe.zPosition = 5
         addChild(topPipe)
         nodesToAnimate.append(topPipe)
         
-        // --- Score Node ---
         let scoreNode = SKNode()
         scoreNode.name = "scoreNode"
-        // Vertically centered in the actual visual gap
         scoreNode.position = CGPoint(x: spawnXPosition, y: (gapBottomY + gapTopY) / 2)
-        scoreNode.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 1, height: pipeGap)) // Height is the defined gap
+        scoreNode.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: 1, height: pipeGap))
         scoreNode.physicsBody?.isDynamic = false
         scoreNode.physicsBody?.categoryBitMask = PhysicsCategory.scoreNode
         scoreNode.physicsBody?.contactTestBitMask = PhysicsCategory.bird
         scoreNode.physicsBody?.collisionBitMask = PhysicsCategory.none
         addChild(scoreNode)
         nodesToAnimate.append(scoreNode)
-        print("[PipeSpawnDebug] ScoreNode position Y: \(scoreNode.position.y)")
+        // print("[PipeSpawnDebug] ScoreNode position Y: \(scoreNode.position.y)") // Reduce log noise
 
-        // --- Move and Remove Actions ---
         let moveDistance = self.frame.width + pipeImageWidth
         let pointsPerSecondSpeed = pipeSpeed * 60.0
         let moveDuration = TimeInterval(moveDistance / pointsPerSecondSpeed)
@@ -354,17 +555,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for node in nodesToAnimate {
             node.run(sequence)
         }
-        print("[PipeSpawnDebug] All pipe parts created and actions started.\n---")
+        // print("[PipeSpawnDebug] All pipe parts created and actions started.\n---") // Reduce log noise
     }
     
     func moveGround() {
         let groundScrollSpeed = pipeSpeed * 60.0
         
-        // First, ensure we have ground sprites
-        let groundSprites = ground.children.compactMap { node -> SKSpriteNode? in
-            guard node.name == "ground", let sprite = node as? SKSpriteNode else { return nil }
-            return sprite
-        }
+        let groundSprites = ground.children.compactMap { $0 as? SKSpriteNode }.filter { $0.name == "ground" }
         
         guard !groundSprites.isEmpty else {
             print("[GroundError] No ground sprites found to animate!")
@@ -372,21 +569,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         for groundSprite in groundSprites {
-            // Calculate proper duration based on ground sprite width
             let moveDurationPerSprite = TimeInterval(groundSprite.size.width / groundScrollSpeed)
             
-            // Create smooth continuous scrolling actions
             let moveLeft = SKAction.moveBy(x: -groundSprite.size.width, y: 0, duration: moveDurationPerSprite)
             let resetPosition = SKAction.moveBy(x: groundSprite.size.width, y: 0, duration: 0)
             let sequence = SKAction.sequence([moveLeft, resetPosition])
             let repeatForever = SKAction.repeatForever(sequence)
             
-            // Remove any existing ground movement before starting new one
             groundSprite.removeAction(forKey: "moveGround")
             groundSprite.run(repeatForever, withKey: "moveGround")
         }
         
-        print("[GroundMovement] Started scrolling for \(groundSprites.count) ground sprites.")
+        // print("[GroundMovement] Started scrolling for \(groundSprites.count) ground sprites.") // Reduce log noise
     }
 
     func stopGroundScrolling() {
@@ -404,21 +598,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             bird.physicsBody?.velocity = CGVector.zero
         }
         
-        // Stop pipe spawning
         pipeSpawnTimer?.invalidate()
         pipeSpawnTimer = nil
         
-        // Stop all node actions (including pipes)
         self.enumerateChildNodes(withName: "//*") { (node, _) in
             if node.name == "pipe" || node.name == "scoreNode" {
                 node.removeAllActions()
             }
         }
         
-        // Stop ground scrolling but don't reset positions yet
         stopGroundScrolling()
         
-        // Add game over UI
         let gameOverLabel = SKLabelNode(fontNamed: "04b_19")
         if UIFont(name: "04b_19", size: 1) == nil {
             gameOverLabel.fontName = "HelveticaNeue-Bold"
@@ -443,46 +633,68 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             $0.name == "pipe" || $0.name == "scoreNode" || $0.name == "gameOverLabel"
         })
         
-        // Reset ground positions properly
-        resetGroundPositions()
+        resetGroundPositions() // Stops and resets ground
         
-        // Reset labels
-        tapToStartLabel.text = "Tap to Start"
-        tapToStartLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        // Game state reset happens in setupCharacterSelection
+        // gameOver = false
+        // gameStarted = false
+        // score = 0
+        // scoreLabel.text = "0"
         
-        // Start new game
-        startGame()
+        // tapToStartLabel.text = "Tap to Start"
+        // tapToStartLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        
+        // Go back to character selection
+        setupCharacterSelection()
     }
     
     func resetGroundPositions() {
-        // Stop any existing ground movement
         stopGroundScrolling()
         
-        // Reset ground sprite positions to their original state
         var index = 0
         for node in ground.children where node.name == "ground" {
             guard let groundSprite = node as? SKSpriteNode else { continue }
-            
-            // Reset to original positions (side by side)
             groundSprite.position = CGPoint(x: CGFloat(index) * groundSprite.size.width, y: 0)
             index += 1
         }
-        
-        print("[GroundReset] Ground positions reset. Sprites repositioned.")
+        // print("[GroundReset] Ground positions reset. Sprites repositioned.") // Reduce log noise
     }
 
     // --- Input Handling ---
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if !gameStarted {
-            if gameOver {
-                resetGame()
-            } else {
-                startGame()
+        guard let touch = touches.first else { return }
+        let touchLocation = touch.location(in: self)
+        
+        if characterSelectionActive {
+            // Check if start game button was tapped
+            if let startButton = childNode(withName: "startGameButton") {
+                if startButton.contains(touchLocation) {
+                    startGameWithSelectedCharacter()
+                    return
+                }
+            }
+            
+            // Check if a character preview was tapped
+            for (index, previewBird) in characterPreviewBirds.enumerated() {
+                if previewBird.contains(touchLocation) {
+                    selectCharacter(index)
+                    return
+                }
+            }
+        } else {
+            // Original game touch handling
+            if !gameStarted {
+                if gameOver {
+                    resetGame() // This will now go to character selection
+                } else {
+                    // This is after character selection, "Tap to Start" is showing
+                    startGame()
+                    flapBird()
+                }
+            } else if !gameOver { // Game is active
                 flapBird()
             }
-        } else if !gameOver {
-            flapBird()
         }
     }
 
@@ -522,8 +734,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 bird.zRotation = rotation
             }
         }
-        if bird != nil && bird.position.y < -(bird.size.height / 2) && !gameOver {
-             triggerGameOver()
+        // Check if bird fell off screen (more robustly, e.g., below ground level if ground is defined)
+        if bird != nil && bird.position.y < (ground.children.first as? SKSpriteNode)?.frame.minY ?? 0 && !gameOver {
+             // More simply, if bird is way off screen bottom:
+             if bird.position.y < -self.frame.size.height / 2 && !gameOver { // Significantly off-screen
+                 triggerGameOver()
+             }
         }
     }
 }
