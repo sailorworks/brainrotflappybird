@@ -1,5 +1,7 @@
 import SpriteKit
 import GameplayKit
+import AVFoundation
+
 
 // Physics Categories
 struct PhysicsCategory {
@@ -19,7 +21,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var pipeSpawnTimer: Timer?
     var scoreLabel: SKLabelNode!
     var tapToStartLabel: SKLabelNode!
-
+    var highScore = 0
+    var highScoreLabel: SKLabelNode!
+    var newHighScoreLabel: SKLabelNode!
+    var isNewHighScore = false
     // Game State
     var gameStarted = false
     var gameOver = false
@@ -53,11 +58,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         setupBackground()
         setupGround()
-        // Bird needs to be initialized for the character selection logic to potentially hide/show it.
-        // It will be fully configured by updateBirdCharacter later.
         setupBird()
-        setupScoreLabel()
+        setupScoreLabel() // This now includes high score setup
         setupTapToStartLabel()
+        
+        // Load high score from storage
+        loadHighScore()
         
         // Show character selection instead of game start
         setupCharacterSelection()
@@ -65,6 +71,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     // --- Setup Methods ---
 
+    func loadHighScore() {
+        highScore = UserDefaults.standard.integer(forKey: "HighScore")
+        print("[HighScore] Loaded high score: \(highScore)")
+    }
+
+    func saveHighScore() {
+        UserDefaults.standard.set(highScore, forKey: "HighScore")
+        UserDefaults.standard.synchronize()
+        print("[HighScore] Saved high score: \(highScore)")
+    }
+
+    func checkAndUpdateHighScore() {
+        if score > highScore {
+            highScore = score
+            isNewHighScore = true
+            saveHighScore()
+            print("[HighScore] NEW HIGH SCORE: \(highScore)")
+        } else {
+            isNewHighScore = false
+        }
+    }
+    
+    func setupHighScoreLabel() {
+        highScoreLabel = SKLabelNode(fontNamed: "04b_19")
+        if UIFont(name: "04b_19", size: 1) == nil {
+            highScoreLabel.fontName = "HelveticaNeue-Bold"
+        }
+        highScoreLabel.fontSize = 35
+        highScoreLabel.fontColor = SKColor.yellow
+        highScoreLabel.position = CGPoint(x: self.frame.midX, y: self.frame.maxY - 160)
+        highScoreLabel.zPosition = 20
+        highScoreLabel.text = "Best: \(highScore)"
+        addChild(highScoreLabel)
+        highScoreLabel.isHidden = true // Hide initially
+    }
     func setupBackground() {
         // Try to load the background image first
         if let backgroundTexture = SKTexture(optionalImageNamed: "background-day.png") {
@@ -166,6 +207,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.text = "0"
         addChild(scoreLabel)
         scoreLabel.isHidden = true // Hide initially
+        
+        // Setup high score label as well
+        setupHighScoreLabel()
     }
 
     func setupTapToStartLabel() {
@@ -379,19 +423,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         removeChildren(in: children.filter { $0.name == "characterSelectionUI" ||
                                             $0.name?.hasPrefix("characterPreview_") == true ||
                                             $0.name == "startGameButton" })
-        characterPreviewBirds.removeAll() // Clear the array
+        characterPreviewBirds.removeAll()
         if selectCharacterLabel?.parent != nil { selectCharacterLabel.removeFromParent() }
         if characterSelectionLabel?.parent != nil { characterSelectionLabel.removeFromParent() }
 
         characterSelectionActive = false
         
         // Update bird with selected character
-        updateBirdCharacter() // This will create and add the new bird
+        updateBirdCharacter()
         
         // Show game elements
         tapToStartLabel.isHidden = false
         scoreLabel.isHidden = false
-        if bird != nil { // bird should be non-nil after updateBirdCharacter
+        highScoreLabel.isHidden = false // Show high score
+        if bird != nil {
             bird.isHidden = false
         }
         
@@ -399,13 +444,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameOver = false
         gameStarted = false
         score = 0
+        isNewHighScore = false
         scoreLabel.text = "0"
+        highScoreLabel.text = "Best: \(highScore)" // Update high score display
         tapToStartLabel.text = "Tap to Start"
-
-        // Bird physics and position are set in updateBirdCharacter.
-        // Gravity will be enabled in startGame() upon the next tap.
     }
-
 
     // --- Game Logic ---
 
@@ -593,6 +636,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameOver = true
         gameStarted = false
         
+        // Check for new high score
+        checkAndUpdateHighScore()
+        
         if bird != nil {
             bird.physicsBody?.affectedByGravity = false
             bird.physicsBody?.velocity = CGVector.zero
@@ -617,32 +663,78 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         gameOverLabel.name = "gameOverLabel"
         gameOverLabel.fontSize = 50
         gameOverLabel.fontColor = SKColor.red
-        gameOverLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 50)
+        gameOverLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 80)
         gameOverLabel.zPosition = 30
         addChild(gameOverLabel)
         
+        // Show final score
+        let finalScoreLabel = SKLabelNode(fontNamed: "04b_19")
+        if UIFont(name: "04b_19", size: 1) == nil {
+            finalScoreLabel.fontName = "HelveticaNeue-Bold"
+        }
+        finalScoreLabel.text = "Score: \(score)"
+        finalScoreLabel.name = "finalScoreLabel"
+        finalScoreLabel.fontSize = 35
+        finalScoreLabel.fontColor = SKColor.white
+        finalScoreLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 20)
+        finalScoreLabel.zPosition = 30
+        addChild(finalScoreLabel)
+        
+        // Show high score
+        let gameOverHighScoreLabel = SKLabelNode(fontNamed: "04b_19")
+        if UIFont(name: "04b_19", size: 1) == nil {
+            gameOverHighScoreLabel.fontName = "HelveticaNeue-Bold"
+        }
+        gameOverHighScoreLabel.text = "Best: \(highScore)"
+        gameOverHighScoreLabel.name = "gameOverHighScoreLabel"
+        gameOverHighScoreLabel.fontSize = 30
+        gameOverHighScoreLabel.fontColor = SKColor.yellow
+        gameOverHighScoreLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 20)
+        gameOverHighScoreLabel.zPosition = 30
+        addChild(gameOverHighScoreLabel)
+        
+        // Show new high score message if applicable
+        if isNewHighScore {
+            newHighScoreLabel = SKLabelNode(fontNamed: "04b_19")
+            if UIFont(name: "04b_19", size: 1) == nil {
+                newHighScoreLabel.fontName = "HelveticaNeue-Bold"
+            }
+            newHighScoreLabel.text = "NEW HIGH SCORE!"
+            newHighScoreLabel.name = "newHighScoreLabel"
+            newHighScoreLabel.fontSize = 25
+            newHighScoreLabel.fontColor = SKColor.green
+            newHighScoreLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 60)
+            newHighScoreLabel.zPosition = 30
+            addChild(newHighScoreLabel)
+            
+            // Add a pulsing animation to the new high score label
+            let scaleUp = SKAction.scale(to: 1.2, duration: 0.5)
+            let scaleDown = SKAction.scale(to: 1.0, duration: 0.5)
+            let pulse = SKAction.sequence([scaleUp, scaleDown])
+            let repeatPulse = SKAction.repeatForever(pulse)
+            newHighScoreLabel.run(repeatPulse)
+        }
+        
         tapToStartLabel.text = "Tap to Restart"
         tapToStartLabel.isHidden = false
-        tapToStartLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
+        tapToStartLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 100)
     }
 
-
     func resetGame() {
-        // Remove game objects
+        // Remove game objects including new game over labels
         self.removeChildren(in: self.children.filter {
-            $0.name == "pipe" || $0.name == "scoreNode" || $0.name == "gameOverLabel"
+            $0.name == "pipe" ||
+            $0.name == "scoreNode" ||
+            $0.name == "gameOverLabel" ||
+            $0.name == "finalScoreLabel" ||
+            $0.name == "gameOverHighScoreLabel" ||
+            $0.name == "newHighScoreLabel"
         })
         
-        resetGroundPositions() // Stops and resets ground
+        resetGroundPositions()
         
-        // Game state reset happens in setupCharacterSelection
-        // gameOver = false
-        // gameStarted = false
-        // score = 0
-        // scoreLabel.text = "0"
-        
-        // tapToStartLabel.text = "Tap to Start"
-        // tapToStartLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+        // Reset new high score flag
+        isNewHighScore = false
         
         // Go back to character selection
         setupCharacterSelection()
