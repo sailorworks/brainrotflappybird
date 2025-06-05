@@ -29,7 +29,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var gameStarted = false
     var gameOver = false
     var score = 0
-
+    var audioPlayer: AVAudioPlayer?
+    var characterAudioFiles = ["flappybird.mp3", "flappybird2.mp3", "flappybird3.mp3"]
+    
     // Constants
     let birdFlapForce: CGFloat = 25.0
     let gravityStrength: CGFloat = -7.0
@@ -51,6 +53,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
 
     // --- Scene Lifecycle ---
+    func setupAudioSession() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+            print("[Audio] Audio session configured successfully")
+        } catch {
+            print("[Audio] ERROR: Failed to setup audio session: \(error.localizedDescription)")
+        }
+    }
 
     override func didMove(to view: SKView) {
         physicsWorld.gravity = CGVector(dx: 0, dy: gravityStrength)
@@ -59,8 +70,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         setupBackground()
         setupGround()
         setupBird()
-        setupScoreLabel() // This now includes high score setup
+        setupScoreLabel()
         setupTapToStartLabel()
+        
+        // Setup audio session
+        setupAudioSession()
         
         // Load high score from storage
         loadHighScore()
@@ -68,7 +82,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Show character selection instead of game start
         setupCharacterSelection()
     }
-
+    
+    func stopCharacterAudio() {
+        audioPlayer?.stop()
+        audioPlayer = nil
+    }
     // --- Setup Methods ---
 
     func loadHighScore() {
@@ -227,6 +245,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     // --- Character Selection Functions ---
+    func playCharacterSelectionAudio(for characterIndex: Int) {
+        guard characterIndex >= 0 && characterIndex < characterAudioFiles.count else {
+            print("[Audio] Invalid character index: \(characterIndex)")
+            return
+        }
+        
+        let audioFileName = characterAudioFiles[characterIndex]
+        
+        guard let audioPath = Bundle.main.path(forResource: audioFileName.replacingOccurrences(of: ".mp3", with: ""), ofType: "mp3") else {
+            print("[Audio] ERROR: Audio file '\(audioFileName)' not found in bundle")
+            return
+        }
+        
+        let audioUrl = URL(fileURLWithPath: audioPath)
+        
+        do {
+            // Stop any currently playing audio
+            audioPlayer?.stop()
+            
+            // Create new audio player
+            audioPlayer = try AVAudioPlayer(contentsOf: audioUrl)
+            audioPlayer?.volume = 0.7 // Adjust volume as needed (0.0 to 1.0)
+            audioPlayer?.prepareToPlay()
+            audioPlayer?.play()
+            
+            print("[Audio] Playing character selection audio: \(audioFileName)")
+        } catch {
+            print("[Audio] ERROR: Failed to play audio '\(audioFileName)': \(error.localizedDescription)")
+        }
+    }
+    
 
     func loadCharacterTextures() {
         let characterNames = ["flappybird.png", "flappybird2.png", "flappybird3.png"]
@@ -351,6 +400,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Update selection
         selectedCharacterIndex = index
+        
+        // Play character selection audio
+        playCharacterSelectionAudio(for: index)
         
         // Update visual indicators
         for (i, previewBird) in characterPreviewBirds.enumerated() {
@@ -721,6 +773,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
 
     func resetGame() {
+        // Stop any playing character audio
+        stopCharacterAudio()
+        
         // Remove game objects including new game over labels
         self.removeChildren(in: self.children.filter {
             $0.name == "pipe" ||
@@ -739,7 +794,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Go back to character selection
         setupCharacterSelection()
     }
-    
     func resetGroundPositions() {
         stopGroundScrolling()
         
