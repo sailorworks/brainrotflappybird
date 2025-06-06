@@ -6,6 +6,7 @@
 //
 
 import SpriteKit
+import AVFoundation
 
 extension GameScene {
 
@@ -30,6 +31,38 @@ extension GameScene {
         } else {
             isNewHighScore = false
         }
+    }
+    
+ 
+    // --- Game Over Sound Logic ---
+    func playGameOverSound() {
+        let soundFileName: String
+        
+        // Check if score is below threshold for low score sound
+        if score < GameConstants.AudioFiles.lowScoreThreshold {
+            soundFileName = GameConstants.AudioFiles.lowScoreGameOverSound
+            print("[GameOverSound] Low score detected (\(score) < \(GameConstants.AudioFiles.lowScoreThreshold))")
+        } else {
+            // Use alternating sounds for normal scores
+            let gameOverCount = UserDefaults.standard.integer(forKey: GameConstants.UserDefaultsKeys.gameOverSoundCount)
+            let soundIndex = gameOverCount % GameConstants.AudioFiles.gameOverSounds.count
+            
+            guard let normalSound = GameConstants.AudioFiles.gameOverSound(at: soundIndex) else {
+                print("[GameOverSound] Error: Could not get sound file for index \(soundIndex)")
+                return
+            }
+            
+            soundFileName = normalSound
+            
+            // Only increment counter for normal game over sounds (not low score)
+            UserDefaults.standard.set(gameOverCount + 1, forKey: GameConstants.UserDefaultsKeys.gameOverSoundCount)
+        }
+        
+        // Play the selected sound
+        let gameOverSoundAction = SKAction.playSoundFileNamed(soundFileName, waitForCompletion: false)
+        self.run(gameOverSoundAction)
+        
+        print("[GameOverSound] Played: \(soundFileName) (score: \(score))")
     }
 
     // --- Game Flow ---
@@ -69,6 +102,9 @@ extension GameScene {
         guard !gameOver else { return }
         gameOver = true
         gameStarted = false
+        
+        // Play game over sound first
+        playGameOverSound()
         
         checkAndUpdateHighScore()
         

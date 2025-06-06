@@ -19,7 +19,7 @@ extension GameScene {
                 bird.zRotation = rotation
             }
         }
-        
+
         // Check if bird fell off screen (below visible ground or significantly off bottom)
         if bird != nil && !gameOver {
             let groundLevel = (ground?.children.first as? SKSpriteNode)?.frame.minY ?? 0
@@ -29,6 +29,7 @@ extension GameScene {
                  // For simplicity, if it's clearly off screen, game over.
                  if bird.position.y < (groundLevel - bird.size.height) { // Ensure it's fully below ground
                      triggerGameOverSequence()
+                  
                  }
             }
         }

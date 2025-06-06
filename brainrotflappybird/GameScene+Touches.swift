@@ -1,14 +1,6 @@
-//
-//  GameScene+Touches.swift
-//  brainrotflappybird
-//
-//  Created by Sahil Prasad on 05/06/25.
-//
-
 import SpriteKit
 
 extension GameScene {
-
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let touchLocation = touch.location(in: self)
@@ -17,6 +9,7 @@ extension GameScene {
             // Check if "TAP TO START GAME" button was tapped
             if let startGameButtonNode = childNode(withName: GameConstants.NodeNames.startGameButton),
                startGameButtonNode.contains(touchLocation) {
+            
                 proceedToGameStart() // This transitions from character selection to "Tap to Start" game screen
                 return
             }
@@ -31,9 +24,11 @@ extension GameScene {
         } else { // Game is in "Ready", "Playing", or "Game Over" state
             if !gameStarted { // Either "Ready" state or "Game Over" state
                 if gameOver {
+                  
                     resetForNewGame() // This will take player back to character selection
                 } else {
                     // "Ready" state (after character selection, "Tap to Start" is showing)
+               
                     startGamePlay()
                     // flapBirdAction() // startGamePlay now includes an initial flap
                 }

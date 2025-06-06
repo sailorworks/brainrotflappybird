@@ -15,19 +15,35 @@ struct GameConstants {
     static let birdFlapForce: CGFloat = 25.0
     static let gravityStrength: CGFloat = -7.0
     static let pipeSpeed: CGFloat = 2.5 // This is a factor, actual speed is calculated as pipeSpeed * 60.0 points/sec
-
     static let pipeGap: CGFloat = 180.0
     static let verticalPaddingForPipes: CGFloat = 15.0
     static let pipeSpawnInterval: TimeInterval = 1.5
-
+    
     struct AudioFiles {
         static let characterBaseNames = ["flappybird", "flappybird2", "flappybird3"]
+        
+        // Game over sound files
+        static let gameOverSounds = ["bonk.mp3", "fortn.mp3"]
+        static let lowScoreGameOverSound = "ga.mp3"
+        static let lowScoreThreshold = 5 // Minimum score to avoid low score sound
+        
+        // High score achievement sound (plays during gameplay)
+        static let highScoreAchievedSound = "animewow.mp3"
+        
+       
+
+        
         static func characterFile(at index: Int) -> String? {
             guard index >= 0 && index < characterBaseNames.count else { return nil }
             return characterBaseNames[index] + ".mp3"
         }
+        
+        static func gameOverSound(at index: Int) -> String? {
+            guard index >= 0 && index < gameOverSounds.count else { return nil }
+            return gameOverSounds[index]
+        }
     }
-
+    
     struct ImageNames {
         static let background = "background-day.png"
         static let ground = "ground_pixelated"
@@ -39,12 +55,12 @@ struct GameConstants {
         static let bird3 = "flappybird3.png"
         static let characterBirds = [bird1, bird2, bird3]
     }
-
+    
     struct FontNames {
         static let main = "04b_19"
         static let fallback = "HelveticaNeue-Bold"
     }
-
+    
     struct NodeNames {
         static let background = "background"
         static let ground = "ground"
@@ -63,11 +79,12 @@ struct GameConstants {
         static let score = "scoreLabel"           // If needed for identification
         static let highScore = "highScoreLabel"     // If needed for identification
     }
-
+    
     struct UserDefaultsKeys {
         static let highScore = "HighScore"
+        static let gameOverSoundCount = "GameOverSoundCount"
     }
-
+    
     struct ZPositions {
         static let background: CGFloat = -10
         static let ground: CGFloat = 1
@@ -82,10 +99,4 @@ struct GameConstants {
         static let gameOverUI: CGFloat = 30
         static let highScoreDisplay: CGFloat = 20 // For the general high score label
     }
-}//
-//  Constants.swift
-//  brainrotflappybird
-//
-//  Created by Sahil Prasad on 05/06/25.
-//
-
+}
